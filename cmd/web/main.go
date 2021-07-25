@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/anthony-halim/booking-webapp/internal/config"
+	"github.com/anthony-halim/booking-webapp/internal/handlers"
+	"github.com/anthony-halim/booking-webapp/internal/render"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/anthony-halim/booking-webapp/pkg/config"
-	"github.com/anthony-halim/booking-webapp/pkg/handlers"
-	"github.com/anthony-halim/booking-webapp/pkg/render"
 )
 
 const portNumber string = ":8080"

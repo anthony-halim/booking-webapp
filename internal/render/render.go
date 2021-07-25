@@ -3,13 +3,13 @@ package render
 import (
 	"bytes"
 	"fmt"
+	"github.com/anthony-halim/booking-webapp/internal/config"
+	"github.com/anthony-halim/booking-webapp/internal/models"
+	"github.com/justinas/nosurf"
 	"log"
 	"net/http"
 	"path/filepath"
 	"text/template"
-
-	"github.com/anthony-halim/booking-webapp/pkg/config"
-	"github.com/anthony-halim/booking-webapp/pkg/models"
 )
 
 // Map of functions that can be used in the template
@@ -21,12 +21,13 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func AddDefaultData(td *models.TemplateData) *models.TemplateData{
+func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.CSRFToken = nosurf.Token(r)
 	return td
 }
 
 // RenderTemplate renders templates using html/template
-func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
 	var tc map[string]*template.Template
 	if app.UseCache {
 		// Get the template cache from app config
@@ -42,7 +43,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData)
 	}
 
 	buf := new(bytes.Buffer)
-	td = AddDefaultData(td)
+	td = AddDefaultData(td, r)
 
 	_ = t.Execute(buf, td)
 	_, err := buf.WriteTo(w)
